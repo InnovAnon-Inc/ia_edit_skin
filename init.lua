@@ -190,7 +190,7 @@ end
 --    }
 --end
 -- Helper: Random Skin Table
-function edit_skin.generate_random_skin(gender)
+function edit_skin.generate_random_skin(gender) -- FIXME how to make alex
     -- Ensure we pick a base that actually has a registered hand node
     local random_base = "edit_skin_base_1.png" -- fallback
     if #edit_skin.base > 0 then
