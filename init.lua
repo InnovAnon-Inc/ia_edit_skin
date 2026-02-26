@@ -156,6 +156,7 @@ function edit_skin.update_player_skin(player)
 		minetest.global_exists("armor") and
 		armor.textures and armor.textures[name]
 	then
+		minetest.log('edit_skin.update_playerskin() armored: '..name)
 		armor.textures[name].skin = output
 		armor.update_player_visuals(armor, player)
 	end
@@ -163,7 +164,57 @@ function edit_skin.update_player_skin(player)
 	if minetest.global_exists("i3") then i3.set_fs(player) end
 end
 
-minetest.register_on_joinplayer(function(player)
+-- Helper: Random Color
+function edit_skin.get_random_color(vibrant)
+    local min = vibrant and 0 or 50
+    local max = vibrant and 255 or 200
+    local r, g, b = math.random(min, max), math.random(min, max), math.random(min, max)
+    return (255 * 0x1000000) + (r * 0x10000) + (g * 0x100) + b
+end
+
+---- Helper: Random Skin Table
+--function edit_skin.generate_random_skin(gender)
+--    return {
+--        base      = "edit_skin_base_1.png",
+--        footwear  = "edit_skin_footwear_" .. math.random(1, 4) .. ".png",
+--        eye       = "edit_skin_eye_"      .. math.random(1, 7) .. ".png",
+--        mouth     = "edit_skin_mouth_"    .. math.random(1, 7) .. ".png",
+--        bottom    = "edit_skin_bottom_"   .. math.random(1, 6) .. ".png",
+--        top       = "edit_skin_top_"      .. math.random(1, 19) .. ".png",
+--        hair      = "edit_skin_hair_"     .. math.random(1, 12) .. ".png",
+--        headwear  = "edit_skin_headwear_" .. math.random(1, 12) .. ".png",
+--        base_color   = edit_skin.get_random_color(false),
+--        hair_color   = edit_skin.get_random_color(false),
+--        top_color    = edit_skin.get_random_color(true),
+--        bottom_color = edit_skin.get_random_color(true),
+--    }
+--end
+-- Helper: Random Skin Table
+function edit_skin.generate_random_skin(gender)
+    -- Ensure we pick a base that actually has a registered hand node
+    local random_base = "edit_skin_base_1.png" -- fallback
+    if #edit_skin.base > 0 then
+        random_base = edit_skin.base[math.random(#edit_skin.base)]
+    end
+
+    return {
+        base         = random_base, -- Use a registered base texture
+        footwear     = "edit_skin_footwear_" .. math.random(1, 4) .. ".png",
+        eye          = "edit_skin_eye_"      .. math.random(1, 7) .. ".png",
+        mouth        = "edit_skin_mouth_"    .. math.random(1, 7) .. ".png",
+        bottom       = "edit_skin_bottom_"   .. math.random(1, 6) .. ".png",
+        top          = "edit_skin_top_"      .. math.random(1, 19) .. ".png",
+        hair         = "edit_skin_hair_"     .. math.random(1, 12) .. ".png",
+        headwear     = "edit_skin_headwear_" .. math.random(1, 12) .. ".png",
+        -- Use the base_color table from edit_skin for the hand node to match
+        base_color   = edit_skin.base_color[math.random(#edit_skin.base_color)],
+        hair_color   = edit_skin.get_random_color(false),
+        top_color    = edit_skin.get_random_color(true),
+        bottom_color = edit_skin.get_random_color(true),
+    }
+end
+
+edit_skin.on_joinplayer = function(player)
 	local function table_get_random(t)
 		return t[math.random(#t)]
 	end
@@ -172,13 +223,18 @@ minetest.register_on_joinplayer(function(player)
 		skin = minetest.deserialize(skin)
 	end
 	if skin then
+		minetest.log('edit_skin.on_joinplayer restore skin')
 		edit_skin.player_skins[player] = skin
 	else
-		if math.random() > 0.5 then
-			skin = table.copy(edit_skin.steve)
-		else
-			skin = table.copy(edit_skin.alex)
-		end
+		minetest.log('edit_skin.on_joinplayer random skin')
+--		if math.random() > 0.5 then
+--			skin = table.copy(edit_skin.steve)
+--		else
+--			skin = table.copy(edit_skin.alex)
+--		end
+		local gender = player:get_meta():get_string("ia_gender:gender")
+		assert(gender ~= nil)
+                skin = edit_skin.generate_random_skin(gender)
 		edit_skin.player_skins[player] = skin
 		edit_skin.save(player)
 	end
@@ -205,13 +261,17 @@ minetest.register_on_joinplayer(function(player)
 			end
 		end)
 	end
-end)
 
-minetest.register_on_leaveplayer(function(player)
+	minetest.log('edit_skin.on_joinplayer skin: '..player:get_meta():get_string("edit_skin:skin"))
+end
+minetest.register_on_joinplayer(edit_skin.on_joinplayer)
+
+edit_skin.on_leaveplayer = function(player)
 	player:get_inventory():set_size("hand", 0)
 	edit_skin.player_skins[player] = nil
 	edit_skin.player_formspecs[player] = nil
-end)
+end
+minetest.register_on_leaveplayer(edit_skin.on_leaveplayer)
 
 minetest.register_on_shutdown(function()
 	for _, player in pairs(minetest.get_connected_players()) do
