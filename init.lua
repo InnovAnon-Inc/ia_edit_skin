@@ -156,7 +156,7 @@ function edit_skin.update_player_skin(player)
 		minetest.global_exists("armor") and
 		armor.textures and armor.textures[name]
 	then
-		minetest.log('edit_skin.update_playerskin() armored: '..name)
+		--minetest.log('edit_skin.update_playerskin() armored: '..name)
 		armor.textures[name].skin = output
 		armor.update_player_visuals(armor, player)
 	end
@@ -262,7 +262,7 @@ edit_skin.on_joinplayer = function(player)
 		end)
 	end
 
-	minetest.log('edit_skin.on_joinplayer skin: '..player:get_meta():get_string("edit_skin:skin"))
+	--minetest.log('edit_skin.on_joinplayer skin: '..player:get_meta():get_string("edit_skin:skin"))
 end
 minetest.register_on_joinplayer(edit_skin.on_joinplayer)
 
