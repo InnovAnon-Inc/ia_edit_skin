@@ -191,27 +191,42 @@ end
 --end
 -- Helper: Random Skin Table
 function edit_skin.generate_random_skin(gender) -- FIXME how to make alex
-    -- Ensure we pick a base that actually has a registered hand node
-    local random_base = "edit_skin_base_1.png" -- fallback
-    if #edit_skin.base > 0 then
-        random_base = edit_skin.base[math.random(#edit_skin.base)]
-    end
+--    -- Ensure we pick a base that actually has a registered hand node
+--    local random_base = "edit_skin_base_1.png" -- fallback
+--    if #edit_skin.base > 0 then
+--        random_base = edit_skin.base[math.random(#edit_skin.base)]
+--    end
+--
+--    return {
+--        base         = random_base, -- Use a registered base texture
+--        footwear     = "edit_skin_footwear_" .. math.random(1, 4) .. ".png",
+--        eye          = "edit_skin_eye_"      .. math.random(1, 7) .. ".png",
+--        mouth        = "edit_skin_mouth_"    .. math.random(1, 7) .. ".png",
+--        bottom       = "edit_skin_bottom_"   .. math.random(1, 6) .. ".png",
+--        top          = "edit_skin_top_"      .. math.random(1, 19) .. ".png",
+--        hair         = "edit_skin_hair_"     .. math.random(1, 12) .. ".png",
+--        headwear     = "edit_skin_headwear_" .. math.random(1, 12) .. ".png",
+--        -- Use the base_color table from edit_skin for the hand node to match
+--        base_color   = edit_skin.base_color[math.random(#edit_skin.base_color)],
+--        hair_color   = edit_skin.get_random_color(false),
+--        top_color    = edit_skin.get_random_color(true),
+--        bottom_color = edit_skin.get_random_color(true),
+--    }
 
-    return {
-        base         = random_base, -- Use a registered base texture
-        footwear     = "edit_skin_footwear_" .. math.random(1, 4) .. ".png",
-        eye          = "edit_skin_eye_"      .. math.random(1, 7) .. ".png",
-        mouth        = "edit_skin_mouth_"    .. math.random(1, 7) .. ".png",
-        bottom       = "edit_skin_bottom_"   .. math.random(1, 6) .. ".png",
-        top          = "edit_skin_top_"      .. math.random(1, 19) .. ".png",
-        hair         = "edit_skin_hair_"     .. math.random(1, 12) .. ".png",
-        headwear     = "edit_skin_headwear_" .. math.random(1, 12) .. ".png",
-        -- Use the base_color table from edit_skin for the hand node to match
-        base_color   = edit_skin.base_color[math.random(#edit_skin.base_color)],
-        hair_color   = edit_skin.get_random_color(false),
-        top_color    = edit_skin.get_random_color(true),
-        bottom_color = edit_skin.get_random_color(true),
-    }
+    local skin        = (gender == "female") and table.copy(edit_skin.alex) or table.copy(edit_skin.steve)
+    skin.footwear     = "edit_skin_footwear_" .. math.random(1, 4) .. ".png"
+    skin.eye          = "edit_skin_eye_"      .. math.random(1, 7) .. ".png"
+    skin.mouth        = "edit_skin_mouth_"    .. math.random(1, 7) .. ".png"
+    skin.bottom       = "edit_skin_bottom_"   .. math.random(1, 6) .. ".png"
+    skin.top          = "edit_skin_top_"      .. math.random(1, 19) .. ".png"
+    skin.hair         = "edit_skin_hair_"     .. math.random(1, 12) .. ".png"
+    skin.headwear     = "edit_skin_headwear_" .. math.random(1, 12) .. ".png"
+    -- Use the base_color table from edit_skin for the hand node to match
+    skin.base_color   = edit_skin.base_color[math.random(#edit_skin.base_color)]
+    skin.hair_color   = edit_skin.get_random_color(false)
+    skin.top_color    = edit_skin.get_random_color(true)
+    skin.bottom_color = edit_skin.get_random_color(true)
+    return skin
 end
 
 edit_skin.on_joinplayer = function(player)
