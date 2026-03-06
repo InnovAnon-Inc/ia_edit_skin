@@ -230,18 +230,21 @@ function edit_skin.generate_random_skin(gender) -- FIXME how to make alex
 end
 
 edit_skin.on_joinplayer = function(player)
-	local function table_get_random(t)
-		return t[math.random(#t)]
-	end
+	assert(player ~= nil)
+	local playername = player:get_player_name()
+	assert(playername ~= nil)
+	--local function table_get_random(t)
+	--	return t[math.random(#t)]
+	--end
 	local skin = player:get_meta():get_string("edit_skin:skin")
 	if skin then
 		skin = minetest.deserialize(skin)
 	end
 	if skin then
-		minetest.log('edit_skin.on_joinplayer restore skin')
+		minetest.log('edit_skin.on_joinplayer('..playername..') restore skin')
 		edit_skin.player_skins[player] = skin
 	else
-		minetest.log('edit_skin.on_joinplayer random skin')
+		minetest.log('edit_skin.on_joinplayer('..playername..') random skin')
 --		if math.random() > 0.5 then
 --			skin = table.copy(edit_skin.steve)
 --		else
