@@ -241,10 +241,10 @@ edit_skin.on_joinplayer = function(player)
 		skin = minetest.deserialize(skin)
 	end
 	if skin then
-		minetest.log('edit_skin.on_joinplayer('..playername..') restore skin')
+		--minetest.log('edit_skin.on_joinplayer('..playername..') restore skin')
 		edit_skin.player_skins[player] = skin
 	else
-		minetest.log('edit_skin.on_joinplayer('..playername..') random skin')
+		--minetest.log('edit_skin.on_joinplayer('..playername..') random skin')
 --		if math.random() > 0.5 then
 --			skin = table.copy(edit_skin.steve)
 --		else
