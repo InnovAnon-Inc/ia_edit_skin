@@ -250,7 +250,7 @@ edit_skin.on_joinplayer = function(player)
 --		else
 --			skin = table.copy(edit_skin.alex)
 --		end
-		local gender = player:get_meta():get_string("ia_gender:gender")
+		local gender = player:get_meta():get_string(ia_gender.attr)
 		assert(gender ~= nil)
                 skin = edit_skin.generate_random_skin(gender)
 		edit_skin.player_skins[player] = skin
