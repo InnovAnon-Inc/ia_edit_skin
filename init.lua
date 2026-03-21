@@ -55,6 +55,7 @@ edit_skin = {
 	restricted_to_player = {},
 	restricted_to_admin = {},
 }
+edit_skin.mod = 'ia'
 
 minetest.register_privilege("edit_skin_admin", {
 	description = S("Allows access to restricted skin items."),
